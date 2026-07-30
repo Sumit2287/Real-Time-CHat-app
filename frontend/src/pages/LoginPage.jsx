@@ -85,11 +85,11 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
+            <button type="submit" className="btn btn-primary w-full shadow-md hover:shadow-lg transition-all" disabled={isLoggingIn}>
               {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading...
+                  Logging in...
                 </>
               ) : (
                 "Sign in"
@@ -97,10 +97,35 @@ const LoginPage = () => {
             </button>
           </form>
 
+          {/* Quick Demo Login Option */}
+          <div className="pt-2 border-t border-base-300">
+            <p className="text-xs text-center text-base-content/60 mb-2.5 font-medium uppercase tracking-wider">
+              Or Instant Demo Sign In
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                className="btn btn-outline btn-sm text-xs flex items-center justify-center gap-1.5 hover:btn-primary transition-all"
+                onClick={() => login({ email: "emma.thompson@example.com", password: "123456" })}
+                disabled={isLoggingIn}
+              >
+                <span>👩 Emma (Seed User)</span>
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline btn-sm text-xs flex items-center justify-center gap-1.5 hover:btn-primary transition-all"
+                onClick={() => login({ email: "james.anderson@example.com", password: "123456" })}
+                disabled={isLoggingIn}
+              >
+                <span>👨 James (Seed User)</span>
+              </button>
+            </div>
+          </div>
+
           <div className="text-center">
             <p className="text-base-content/60">
               Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
+              <Link to="/signup" className="link link-primary font-semibold">
                 Create account
               </Link>
             </p>
