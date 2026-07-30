@@ -8,6 +8,7 @@
     "start": "npm run start --prefix backend",
     "seed": "npm run seed --prefix backend"
   },
+  "homepage": "https://chitchat-rv2h.onrender.com",
   "keywords": [],
   "author": "",
   "license": "ISC"
