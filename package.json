@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm install --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend",
+    "build": "npm install --prefix backend --legacy-peer-deps && npm install --prefix frontend --include=dev && npm run build --prefix frontend",
     "start": "npm run start --prefix backend",
-    "seed": "npm run seed --prefix backend"
+    "seed": "npm run seed --prefix backend",
+    "seed:all": "npm run seed:all --prefix backend"
   },
   "homepage": "https://chitchat-rv2h.onrender.com",
   "keywords": [],
