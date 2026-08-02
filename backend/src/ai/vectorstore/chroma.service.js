@@ -20,17 +20,36 @@ class ChromaService {
 
     this.initPromise = (async () => {
       try {
-        const chromaUrl = process.env.CHROMA_URL || "http://localhost:8000";
-        this.client = new ChromaClient({ path: chromaUrl });
+        const rawUrl = process.env.CHROMA_URL || "http://localhost:8000";
+        let clientConfig;
+        try {
+          const parsed = new URL(rawUrl);
+          const ssl = parsed.protocol === "https:";
+          const host = parsed.hostname || "localhost";
+          const port = parsed.port ? parseInt(parsed.port, 10) : (ssl ? 443 : 8000);
+          clientConfig = { host, port, ssl };
+        } catch {
+          clientConfig = { path: rawUrl };
+        }
+
+        this.client = new ChromaClient(clientConfig);
         
+        // Custom embedding function matching BAAI/bge-small-en-v1.5
+        const customEmbeddingFunction = {
+          generate: async (texts) => {
+            return Promise.all(texts.map((t) => bgeEmbeddings.embedQuery(t)));
+          },
+        };
+
         // Ensure collection exists
         this.collection = await this.client.getOrCreateCollection({
           name: this.collectionName,
           metadata: { "hnsw:space": "cosine" },
+          embeddingFunction: customEmbeddingFunction,
         });
 
         this.initialized = true;
-        console.log(`[ChromaService] Successfully connected to ChromaDB at ${chromaUrl}`);
+        console.log(`[ChromaService] Successfully connected to ChromaDB at ${rawUrl}`);
       } catch (error) {
         console.warn(`[ChromaService] Native ChromaDB server not reachable (${error.message}). Operating with resilient hybrid vector store.`);
         this.initialized = true;
