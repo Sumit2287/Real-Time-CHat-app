@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { Image, Send, X } from "lucide-react";
+import { Image, Send, X, Bot } from "lucide-react";
 import toast from "react-hot-toast";
+import SmartReplies from "./SmartReplies";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -28,6 +29,16 @@ const MessageInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleSelectReply = (replyText) => {
+    setText(replyText);
+  };
+
+  const handleAiShortcut = () => {
+    if (!text.startsWith("@AI")) {
+      setText((prev) => `@AI ${prev}`.trim());
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
@@ -49,6 +60,9 @@ const MessageInput = () => {
 
   return (
     <div className="p-4 w-full">
+      {/* Smart Replies Component */}
+      <SmartReplies onSelectReply={handleSelectReply} />
+
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -70,11 +84,21 @@ const MessageInput = () => {
       )}
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
+        <div className="flex-1 flex gap-2 items-center">
+          <button
+            type="button"
+            onClick={handleAiShortcut}
+            title="Ask AI Assistant"
+            className={`btn btn-circle btn-sm ${
+              text.startsWith("@AI") ? "btn-primary" : "btn-ghost text-primary"
+            }`}
+          >
+            <Bot className="size-4" />
+          </button>
           <input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="Type a message..."
+            placeholder="Type a message or use @AI to ask assistant..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           />

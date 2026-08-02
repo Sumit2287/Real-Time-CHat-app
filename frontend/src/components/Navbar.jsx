@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { useChatStore } from "../store/useChatStore";
+import { LogOut, MessageSquare, Settings, User, Sparkles } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
+  const { setIsSearchModalOpen } = useChatStore();
 
   return (
     <header
@@ -29,6 +31,16 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {authUser && (
+              <button
+                onClick={() => setIsSearchModalOpen(true)}
+                className="btn btn-sm btn-primary btn-outline gap-1.5 rounded-lg text-xs font-semibold hover:scale-105 transition-all shadow-sm"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-primary" />
+                <span className="hidden sm:inline">AI Search</span>
+              </button>
+            )}
+
             <Link
               to={"/settings"}
               className="btn btn-sm btn-ghost gap-2 transition-colors rounded-lg hover:bg-base-200"
